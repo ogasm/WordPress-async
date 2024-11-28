@@ -1,0 +1,8 @@
+.container {
+  display: flex;
+  gap: 1rem;
+}
+.container button{
+  padding: 1rem;
+  width: 120px;
+}

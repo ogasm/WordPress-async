@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "WordPress Content Sync",
+  "version": "1.0",
+  "description": "WordPressのコンテンツを環境間でコピー",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [{
+    "matches": ["*://*/*wp-admin/post*"],
+    "js": ["content.js"]
+  }],
+  "host_permissions": [
+    "*://*/*"
+  ]
+}
