@@ -42,6 +42,35 @@ async function switchToCodeEditor() {
   }
 }
 
+// コードエディターを終了する関数を追加
+async function exitCodeEditor() {
+  try {
+    // より具体的なセレクタでボタンを探す
+    const exitButtons = Array.from(document.querySelectorAll('button.components-button.is-tertiary'));
+    const exitButton = exitButtons.find(button => button.textContent === 'コードエディターを終了');
+    
+    if (exitButton) {
+      console.log('終了ボタンを発見');
+      exitButton.click();
+      // 終了処理の完了を待つ
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // 終了が成功したか確認
+      const codeEditor = document.querySelector('.editor-post-text-editor');
+      if (!codeEditor) {
+        console.log('コードエディター終了成功');
+        return true;
+      }
+    }
+    
+    console.log('終了ボタンが見つからないか、終了に失敗');
+    return false;
+  } catch (error) {
+    console.error('exitCodeEditor エラー:', error);
+    return false;
+  }
+}
+
 // コンテンツの取得関数
 async function getContent() {
   try {
@@ -63,11 +92,16 @@ async function getContent() {
       };
     }
 
-    return { 
+    const result = { 
       content: codeEditor.value || '',
       title: titleEditor.value || '',
       success: true 
     };
+
+    // コピー完了後にコードエディターを終了
+    await exitCodeEditor();
+    return result;
+
   } catch (error) {
     console.error('getContent エラー:', error);
     return { 
@@ -111,6 +145,9 @@ async function setContent(data) {
     [titleEditor, codeEditor].forEach(editor => {
       editor.dispatchEvent(new Event('input', { bubbles: true }));
     });
+
+    await exitCodeEditor();
+    
 
     return { success: true };
   } catch (error) {
